@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: db_user
+    image: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - api-net
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: user
+    volumes:
+      - './pg_data:/var/lib/postgresql/data'
+  
+  pgadmin:
+    container_name: pgAdm
+    image: 'dpage/pgadmin4'
+    networks:
+      - api-net
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dkireenkov@admin.ru
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+
+volumes:
+  pg_data:
+
+networks:
+  api-net:
+    name: api-net
+    driver: bridge
+    external: true
