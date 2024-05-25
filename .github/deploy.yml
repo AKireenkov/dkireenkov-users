@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: executing remote ssh comands using password
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH }}
+          script: |
+            mkdir Newdkireenkov-users && cd Newdkireenkov-users
+            eval 'ssh-agent -s'
+            ssh-add /root/.ssh/git
+            git clone git@github.com:Zapchasti-garant/dkireenkov-users.git
+            cp ../dkireenkov-users/.env .env
+            npm i
+            npm run build
+            cd ../
+            rm -rf dkireenkov-users
+            cp -r ./Newdkireenkov-users/dkireenkov-users .
+            rm -rf Newdkireenkov-users
+            cd dkireenkov-users
+            docker-compose up --build -d
