@@ -31,4 +31,9 @@ export class UserService {
                 throw new HttpException(ex, HttpStatus.BAD_REQUEST);
                         }
         }
+
+        public getAll(): Promise<User[]> {
+                return this.userRepo.findAll(
+                );
+        }
 }

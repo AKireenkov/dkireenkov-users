@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from "@nestjs/common";
+import {Body, Controller, Get, Post} from "@nestjs/common";
 import {UserService} from "./user.service";
 import {User} from "./model/user.model";
 import {CreateDto} from "./dto/create.dto";
@@ -23,5 +23,13 @@ export class UserController {
     @Post("/signin")
     signIn(@Body() data: UserAuthDto): Promise<User> {
         return this.userService.signIn(data);
+    }
+
+    /**
+     * Получить список всех пользователей
+     */
+    @Get("/")
+    getAll(): Promise<User[]> {
+        return this.userService.getAll();
     }
 }
