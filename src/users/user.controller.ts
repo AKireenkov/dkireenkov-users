@@ -3,8 +3,9 @@ import {UserService} from "./user.service";
 import {User} from "./model/user.model";
 import {CreateDto} from "./dto/create.dto";
 import { UserAuthDto } from "./dto/user-auth.dto";
+import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-
+@ApiTags('user')
 @Controller("/user")
 export class UserController {
     constructor(private readonly userService: UserService) {
@@ -14,14 +15,22 @@ export class UserController {
      * Регистрация
      */
     @Post("/signup")
-    signup(@Body() user: CreateDto): Promise<User> {
+    @ApiBody({ type: CreateDto})
+    @ApiResponse({
+        type: Boolean
+    })
+    signup(@Body() user: CreateDto): Promise<Boolean> {
         return this.userService.signup(user);
     }
     /**
      * Авторизация
      */
     @Post("/signin")
-    signIn(@Body() data: UserAuthDto): Promise<User> {
+    @ApiBody({ type: UserAuthDto})
+    @ApiResponse({
+        type: [User]
+    })
+    signIn(@Body() data: UserAuthDto): Promise<User|String> {
         return this.userService.signIn(data);
     }
 

@@ -3,6 +3,7 @@ import {User} from "./model/user.model";
 import {Op} from "sequelize";
 import {CreateDto} from "./dto/create.dto";
 import { UserAuthDto } from "./dto/user-auth.dto";
+import { retryWhen } from "rxjs";
 
 @Injectable()
 export class UserService {
@@ -13,20 +14,22 @@ export class UserService {
     ) {
     }
 
-        public async signup(user: CreateDto): Promise<User> {
+        public async signup(user: CreateDto): Promise<Boolean> {
             try {
-                 return await this.userRepo.create({...user});
+                 return await this.userRepo.create({...user}) != null;
             } catch (ex) {
                 throw new HttpException(ex, HttpStatus.BAD_REQUEST);
             }
         }
 
-        public async signIn(data: UserAuthDto): Promise<User> {
+        public async signIn(data: UserAuthDto): Promise<User|String> {
             try {
-                return await this.userRepo.findOne({
+                const user = await this.userRepo.findOne({
                         where: {email: data.email, password: data.password}
                     }
+
                 );
+                return user ? user : "Введено неверное имя пользователя или пароль" 
             } catch (ex) {
                 throw new HttpException(ex, HttpStatus.BAD_REQUEST);
                         }
