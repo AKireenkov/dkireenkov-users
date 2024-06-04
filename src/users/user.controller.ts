@@ -19,7 +19,7 @@ export class UserController {
     @ApiResponse({
         type: Boolean
     })
-    signup(@Body() user: CreateDto): Promise<Boolean> {
+    signup(@Body() user: CreateDto): Promise<User> {
         return this.userService.signup(user);
     }
     /**

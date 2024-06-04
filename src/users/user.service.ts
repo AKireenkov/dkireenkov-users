@@ -14,9 +14,9 @@ export class UserService {
     ) {
     }
 
-        public async signup(user: CreateDto): Promise<Boolean> {
+        public async signup(user: CreateDto): Promise<User> {
             try {
-                 return await this.userRepo.create({...user}) != null;
+                 return await this.userRepo.create({...user});
             } catch (ex) {
                 throw new HttpException(ex, HttpStatus.BAD_REQUEST);
             }
